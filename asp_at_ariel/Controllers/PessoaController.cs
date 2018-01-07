@@ -1,4 +1,4 @@
-﻿using asp_at_ariel.FakeDB;
+﻿using asp_at_ariel.Domain;
 using asp_at_ariel.Models;
 using asp_at_ariel.Repository;
 using System;
@@ -11,13 +11,18 @@ namespace asp_at_ariel.Controllers
 {
     public class PessoaController : Controller
     {
-        Banco database = new Banco();
+        DataAcess database = new DataAcess();
 
         public ActionResult Index()
         {
             return View(database.getListaPessoas());
         }
         
+        public ActionResult TodosAmigos()
+        {
+            return View(database.getListaPessoas());
+        }
+
         public ActionResult Details(int id)
         {
             PessoaModel PessoaEncontrada = database.BuscarPessoa(id);

@@ -18,6 +18,8 @@ namespace asp_at_ariel.Repository
             {
                 var commandText = "SELECT * FROM Pessoa";
                 var selectCommand = new SqlCommand(commandText, connection);
+                //int teste = connection.ConnectionTimeout;
+   
                 PessoaModel pessoa = null;
                 var pessoas = new List<PessoaModel>();
                 try
@@ -35,6 +37,10 @@ namespace asp_at_ariel.Repository
                             pessoas.Add(pessoa);
                         }
                     }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
                 }
                 finally
                 {
@@ -182,5 +188,45 @@ namespace asp_at_ariel.Repository
                 return pessoas;
             }
         }
+
+        public  List<PessoaModel> GetAniversariantes()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                var commandText = "SELECT * FROM Pessoa";
+                var selectCommand = new SqlCommand(commandText, connection);
+                PessoaModel pessoa = null;
+                var pessoas = new List<PessoaModel>();
+                DateTime DataAtual = DateTime.Today;
+                try
+                {
+                    connection.Open();
+                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection))
+                    {
+                        while (reader.Read())
+                        {
+                            if(Convert.ToDateTime(reader["Nascimento"]).Month == DataAtual.Month)
+                            {
+                                if (Convert.ToDateTime(reader["Nascimento"]).Day == DataAtual.Day)
+                                {
+                                    pessoa = new PessoaModel();
+                                    pessoa.Id = (int)reader["Id"];
+                                    pessoa.Nome = reader["Nome"].ToString();
+                                    pessoa.Sobrenome = reader["Sobrenome"].ToString();
+                                    pessoa.DataNascimento = Convert.ToDateTime(reader["Nascimento"]);
+                                    pessoas.Add(pessoa);
+                                }
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                return pessoas;
+            }
+        }
+
     }
 }

@@ -4,16 +4,21 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Início</h2>
 
 <p>
-    @Html.ActionLink("Criar", "Create")
+    @Html.ActionLink("Adicionar Amigo", "Create")
 </p>
 
+@if (Model.Count() != 0)
+{
+    DateTime dataAtual = DateTime.Today;
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Aniversariantes do dia
+    </div>
     <table class="table">
 
-    @if (Model.Count() != 0)
-    {
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
@@ -26,27 +31,82 @@
             </th>
             <th></th>
         </tr>
-        foreach (var item in Model)
+
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sobrenome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DataNascimento)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Deletar", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+
+            if (item.DataNascimento.Month == dataAtual.Month && item.DataNascimento.Day == dataAtual.Day)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sobrenome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataNascimento)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Deletar", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
         }
-    }else
-    {
-        <p>Nenhum amigo cadastrado no momento</p>
-    }
-</table>
+    </table>
+   </div>
+    
+    
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Todos
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sobrenome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataNascimento)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.DataNascimento.Month != dataAtual.Month && item.DataNascimento.Day != dataAtual.Day)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sobrenome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataNascimento)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Deletar", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        }
+
+    </table>
+</div>
+
+
+}
+else
+{
+    <h1>Nenhum amigo cadratrado</h1>
+}
